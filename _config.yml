@@ -1,13 +1,13 @@
 # Site settings
 title: DongYeo's Blog
 header-img: img/home-bg.jpg
-email: your-email@yourdomain.com
-description: "Write your site description here. It will be used as your sites meta description as well!"
+email: linxury@foxmail.com
+description: "Code never lies to me."
 baseurl: ""
 url: "http://localhost:4000"
-twitter_username: SBootstrap
-github_username:  davidtmiller
-facebook_username:  IronSummitMedia
+twitter_username: 
+github_username:  dongyeo
+facebook_username:  
 
 # Build settings
 markdown: kramdown
