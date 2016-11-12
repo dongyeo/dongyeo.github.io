@@ -5,9 +5,9 @@ email: linxury@foxmail.com
 description: "Code never lies to me."
 baseurl: ""
 url: "http://localhost:4000"
-twitter_username: 
+twitter_username:
 github_username:  dongyeo
-facebook_username:  
+facebook_username:
 
 # Build settings
 markdown: kramdown
