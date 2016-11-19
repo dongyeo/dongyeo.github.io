@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "用开源产品撸个监控系统(1)"
-date:       2016-10-12 12:00:00
+date:       2016-11-12 12:00:00
 author:     "DongYeo"
 header-img: "img/post-bg-02.jpg"
 tags: ["监控系统","日志采集"]
