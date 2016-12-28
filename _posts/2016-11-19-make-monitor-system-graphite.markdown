@@ -44,12 +44,14 @@ Carbon的安装非常的简单，在官网的文档里有详细的介绍，推�
 
 carbon支持一下三种种通信协议来接受上报的数据：
 - Plain text protocol，平文本协议，上文中的Logster的GraphiteOutput模块使用的就是这种平文本协议，通过向目的carbon-cache客户端建立套接字链接，发送平文本协议字符串，来上报监控数据，以使用类似Netcat（nc）命令工具发布(PORT2003)为例：
+
 ```bash
 echo “<metricPath> <metricValue> <timestamp>”| nc –q0 ${SERVER} ${PORT}
 ```
 
 - Pickle protocol，多层级元组数据结构(PORT2004)
 例：
+
 ```
 [(path, (timestamp, value)), ...]
 payload = pickle.dumps(listOfMetricTuples, protocol=2)
@@ -66,15 +68,18 @@ message = header + payload
 当我们兴致匆匆地启动cache进程，然后启动日志采集工具不断得往cache进程发送数据的时候，你会发现，当在分布式的环境下，实际的数据和采集的数据之间并不是一致的。不用过多分析，大家也很快就等得出答案，我们缺针对数据进行聚合这么一个流程。仔细看carbon的架构，我们发现还有一个carbon-aggregator的模块没用使用。
 
 carbone配置目录下有一个aggregation-rules.conf配置文件，这个配置文件用于配置上报指标的聚合规则，例如：我们采集的指标名称如下：
+
 ```
 <env>.applications.<app>.<server>.<metric>
 ```
 我们可以在聚合配置文件中如下配置：
+
 ```
 <env>.applications.<app>.all.requests (60) = sum <env>.applications.<app>.*.requests
 <env>.applications.<app>.all.latency (60) = avg <env>.applications.<app>.*.latency
 ```
 当接受如下的数据的时候：
+
 ```
 prod.applications.apache.www01.requests
 prod.applications.apache.www02.requests
@@ -113,4 +118,5 @@ aggregationMethod = min
 ### graphite-web
 
 哼，又臭又长的无脑安装，当解决完所有版本依赖，你就可以跑起这个web应用。
+
 ![graphite-slo]({{ site.baseurl }}/img/graphite-web.png)
