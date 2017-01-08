@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "用开源产品撸个监控系统(2)"
+title:      "用开源产品撸个监控系统（二）——展示存储"
 date:       2016-11-18 08:00:00
 author:     "DongYeo"
 header-img: "img/post-bg-01.jpg"
