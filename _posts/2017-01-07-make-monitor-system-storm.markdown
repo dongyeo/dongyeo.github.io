@@ -57,7 +57,7 @@ N时间单位持续|阈值比较|电平触发|适合脉冲、抖动打的业务�
 
 拓扑的入口ApiStramingSpout是负责向上一章节搭建的graphite-web提高的数据拉取api，拉取我们需要配置报警的指标数据。
 
-```Java
+```java
 **
  * Created by yeodong on 10/5/16.
  */
@@ -129,7 +129,7 @@ public class ApiStreamingSpout extends BaseRichSpout {
 
 用于我们拉取的数据是一个json的字符串，需要通过JsonParseSpout这个类来将字符串解析成Java的pojo，在这里笔者直接取出数据并进行了阈值的判断，并对触发阈值报警的数据，产生一个告警消息，让告警spout进行处理。实际情景下，可以根据不同的数据源，解析成不同的消息，并丢给不同的告警规则处理的spout程序进行处理。
 
-```Java
+```java
 /**
  * Created by yeodong on 10/10/2016.
  */
@@ -175,7 +175,7 @@ class Data{
 用于将上游经过JsonParseSpout处理的上游产生的告警信息，并调用告警模块通知先关的人员，由于是示范程序，只在终端进行的告警的打印。
 
 
-```Java
+```java
 /**
  * Created by yeodong on 13/10/2016.
  */
