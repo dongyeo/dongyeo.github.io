@@ -35,18 +35,19 @@ tags: ["PHP"]
 ### RESTFul服务程序环境配置
 由于RESTFul服务采用的是PHP yii2.0框架开发，所以，api服务器需要配置php 环境。因为yum安装的php版本过于老旧，yii框架无法正常使用。所以，采用编译安装的方式安装php：
 
->\# yum groupinstall "Development tools"
->\#yum -y install libxml2-devel gd-devel libmcrypt-devel curl curl-devel openssl-devel
->\#tar -xvf php-5.5.5.tar.gz
->\#cd php-5.5.5
->\#./configure --prefix=/usr/local/php --with-apxs2=/usr/sbin/apxs  --enable-shared --with-libxml-dir --with-gd --with-openssl --enable-mbstring --with-mcrypt --with-mysqli --with-mysql --enable-opcache --enable-mysqlnd --enable-zip --with-zlib-dir --with-pdo-mysql --with-jpeg-dir --with-freetype-dir --with-curl --without-pdo-sqlite --without-sqlite3 --disable-fileinfo
->\#make
->\#make install
->\#cp php.ini-production /usr/local/php/lib/php.ini
->在apache配置文件中添加
->LoadModule php5_module modules/libphp5.so
->上面那行可能在编译安装 php 的过程中已经由系统自动添加了
->```
+```
+# yum groupinstall "Development tools"
+# yum -y install libxml2-devel gd-devel libmcrypt-devel curl curl-devel openssl-devel
+# tar -xvf php-5.5.5.tar.gz
+# cd php-5.5.5
+# ./configure --prefix=/usr/local/php --with-apxs2=/usr/sbin/apxs  --enable-shared --with-libxml-dir --with-gd --with-openssl --enable-mbstring --with-mcrypt --with-mysqli --with-mysql --enable-opcache --enable-mysqlnd --enable-zip --with-zlib-dir --with-pdo-mysql --with-jpeg-dir --with-freetype-dir --with-curl --without-pdo-sqlite --without-sqlite3 --disable-fileinfo
+# make
+# make install
+# cp php.ini-production /usr/local/php/lib/php.ini
+在apache配置文件中添加
+LoadModule php5_module modules/libphp5.so
+上面那行可能在编译安装 php 的过程中已经由系统自动添加了
+
 <FilesMatch \.php$>
 	SetHandler application/x-httpd-php
 </FilesMatch>
@@ -55,40 +56,42 @@ tags: ["PHP"]
 由于有短信验证的需求，短信验证码有有效期的限制，故需要给服务器安装memcache客户端和php memcached扩展：
 memache程序直接
 
->\#yum install memcached
-> 启动memcache的服务端：
->Memcached -d -m 10 -u root -l 127.0.0.1 -p 11211 -c 512 -P /tmp/memcached.pid
+```
+# yum install memcached
 
->参数说明：
->-d选项是启动一个守护进程；
->-m是分配给Memcache使用的内存数量，单位是MB，我这里是10MB；
->-u是运行Memcache的用户，我这里是root；
->-l是监听的服务器IP地址我这里指定了服务器的IP地址127.0.0.1；
->-p是设置Memcache监听的端口，我这里设置了11211，最好是1024以上的端口；
->-c选项是最大运行的并发连接数，默认是1024，我这里设置了512，按照你服务器的负载量来设定；
->-P是设置保存Memcache的pid文件，我这里是保存在 /tmp/memcached.pid；
+启动memcache的服务端：Memcached -d -m 10 -u root -l 127.0.0.1 -p 11211 -c 512 -P /tmp/memcached.pid
 
->安装php memcached 扩展：
->\#tar xvf memcache-3.0.5.tar
->\#cd memcache-3.0.5
->\#/usr/local/php/bin/phpize
->\#./configure --enable-memcache --with-php-config=/usr/local/php/bin/php-config --with-zlib-dir
->\#make
->\#make install Installing shared extensions:
->/usr/local/php/lib/php/extensions/no-debug-non-zts-20060613/
- >注意上面这行返回的信息，将下面两行添加到/usr/local/php/lib/php.ini
- >extension_dir = "/usr/local/php/lib/php/extensions/no-debug-non-zts-20060613/"
- >extension=memcache.so
+参数说明：
+-d选项是启动一个守护进程；
+-m是分配给Memcache使用的内存数量，单位是MB，我这里是10MB；
+-u是运行Memcache的用户，我这里是root；
+-l是监听的服务器IP地址我这里指定了服务器的IP地址127.0.0.1；
+-p是设置Memcache监听的端口，我这里设置了11211，最好是1024以上的端口；
+-c选项是最大运行的并发连接数，默认是1024，我这里设置了512，按照你服务器的负载量来设定；
+-P是设置保存Memcache的pid文件，我这里是保存在 /tmp/memcached.pid；
 
+安装php memcached 扩展：
+#tar xvf memcache-3.0.5.tar
+#cd memcache-3.0.5
+#/usr/local/php/bin/phpize
+#./configure --enable-memcache --with-php-config=/usr/local/php/bin/php-config --with-zlib-dir
+#make
+#make install Installing shared extensions:
+/usr/local/php/lib/php/extensions/no-debug-non-zts-20060613/
+注意上面这行返回的信息，将下面两行添加到/usr/local/php/lib/php.ini
+extension_dir = "/usr/local/php/lib/php/extensions/no-debug-non-zts-20060613/"
+extension=memcache.so
+```
 为方便版本控制和方便代码实时更新上传服务器实际生产环境，还需要配置SVN服务。
 
->\#yum install subversion
->\#mkdir ..../SVN 创建根目录 （这个随意）
->创建repo库
->\#svnadmin create ..../SVN/repo
->\#cd  ..../repo/conf
->\#vi passwd //add user like this : user=password
->\#vi authz
+```
+#yum install subversion
+#mkdir ..../SVN 创建根目录 （这个随意）
+创建repo库
+#svnadmin create ..../SVN/repo
+#cd  ..../repo/conf
+#vi passwd //add user like this : user=password
+#vi authz
 [groups]            #组
 admin = hello,www   #创建一个admin组，将用户加入到组
 [/]                 #根目录权限设置（就是“svn”这个文件夹）
@@ -96,53 +99,53 @@ aaa = rw            #aaa对svn下的所有版本库有读写权限
 [repo:/]            #repo:/,表示对repo版本库下的所有资源设置权限
 @admin = rw         #admin组的用户对repo版本库有读写权限
 
->\#vim svnserve.conf
->[general]
-\#匿名访问的权限，可以是read,write,none,默认为read
+#vim svnserve.conf
+[general]
+#匿名访问的权限，可以是read,write,none,默认为read
 anon-access = none
-\#使授权用户有写权限
+#使授权用户有写权限
 auth-access = write
-\#密码数据库的路径
+#密码数据库的路径
 password-db = passwd
-\#访问控制文件
+#访问控制文件
 authz-db = authz
-\#认证命名空间，subversion会在认证提示里显示，并且作为凭证缓存的关键字
+#认证命名空间，subversion会在认证提示里显示，并且作为凭证缓存的关键字
 realm = /opt/svn/repo
 
->[root@localhost conf]#vim /etc/sysconfig/iptables
+[root@localhost conf]#vim /etc/sysconfig/iptables
 添加以下内容：
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 3690 -j ACCEPT
 保存后重启防火墙
 [root@localhost conf]#service iptables restart
 
->\#svnserve -d -r /opt/svn/repo
+#svnserve -d -r /opt/svn/repo
 
->[root@localhost password]# killall svnserve //停止
->[root@localhost password]# svnserve -d -r /opt/svn/repo // 启动
->
->设置WEB服务器根目录为/var/www/html
+[root@localhost password]# killall svnserve //停止
+[root@localhost password]# svnserve -d -r /opt/svn/repo // 启动
+设置WEB服务器根目录为/var/www/html
 
->checkout一份SVN
->\#svn co svn://localhost /var/www/html/yuanxin
->修改权限为WEB用户
->chown -R apache:apache /var/www/html/yuanxin
+checkout一份SVN
+#svn co svn://localhost /var/www/html/yuanxin
+修改权限为WEB用户
+chown -R apache:apache /var/www/html/yuanxin
 
->建立同步脚本
+建立同步脚本
 
->\#cd /www/svndata/oplinux/hooks/
+#cd /www/svndata/oplinux/hooks/
 
->\#cp post-commit.tmpl post-commit
+#cp post-commit.tmpl post-commit
 
->编辑post-commit,在文件最后添加以下内容
+编辑post-commit,在文件最后添加以下内容
 
->export LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
 SVN=/usr/bin/svn
 WEB=/www/webroot/
-\$SVN update \$WEB –username rsync –password rsync
+$SVN update \$WEB –username rsync –password rsync
 chown -R apache:apache $WEB
 
->增加脚本执行权限
->\#chmod a+x post-commit
+增加脚本执行权限
+#chmod a+x post-commit
+```
 
 这样就可以在本地使用SVN客户端实时将本地的代码commit到服务器的仓库，并同步到web应用下。
 
