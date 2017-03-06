@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "C++ 用critical_section 代码临界区模拟信号量，解决生产者消费者的问题"
-date:       2014-10-26 21:36:00
+date:       2014-10-26 21:36:00 +0800
 author:     "DongYeo"
 header-img: "img/post-bg-02.jpg"
 tags: ["C++"]
