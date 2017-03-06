@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Scaling Memcache at Facebook论文读书笔记"
-date:       2016-11-18 08:00:00
+date:       2017-03-05 08:00:00
 author:     "DongYeo"
 header-img: "img/post-bg-01.jpg"
 tags: ["分布式"]
