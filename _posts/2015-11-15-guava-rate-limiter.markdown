@@ -20,7 +20,7 @@ tags: ["Java","Guava"]
 
 - 令牌桶算法：令牌桶算法的原理是系统会以一个恒定的速度往桶里放入令牌，直到到达令牌桶容量，令牌不在增加，而如果请求需要被处理，则需要先从桶里获取一个令牌，当桶里没有令牌可取时，则拒绝服务。
 <br>
-![]({{ site.baseurl }}/img/rate-limiter-token.jpg)
+![]({{ site.baseurl }}/img/rate-limiter-token.png)
 
 ## Guava RateLimiter
 
