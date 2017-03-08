@@ -1,0 +1,117 @@
+---
+layout: page
+title: "Perk Tree"
+description: "My Perk Tree"
+header-img: "img/post-bg-05.jpg"
+---
+
+<script>
+  var tree = [
+    {
+      name:"前端",
+      done:false,
+      sub:[
+        {
+          name:"HTML",
+        },
+        {
+          name:"CSS",
+        },
+        {
+          name:"Jquery"
+        },
+        {
+          name:"React",
+        },
+        {
+          name:"Webpack",
+        },
+        {
+          name:"Electron",
+          done:false,
+        }
+      ],
+    },{
+      name:"后端",
+      done:false,
+      sub:[{
+        name:"Java（Spring）",
+        done:false,
+        sub:[
+            {name:"MVC"},{name:"Boot"},{name:"Data",done:false},{name:"Batch",done:false}
+      ]},{
+        name:"PHP",
+        sub:[{name:"Yii2.0"},{name:"Codeignitor"}],
+      },{
+        name:"Server",
+        done:false,
+        sub:[{name:"OpenResty"},{name:"lua"},{name:"Tomcat",done:false}],
+      },{
+        name:"存储",
+        done:false,
+        sub:[{name:"MySQL"},{name:"Memcache"},{name:"Redis"},{name:"ElasticSearch",done:false},{name:"HBase",done:false}],
+      }]
+    },{
+      name:"中间件",
+      done:false,
+      sub:[
+        {
+          name:"MQ",
+          done:false,
+          sub:[{name:"kafka",done:false},{name:"notify"}]
+        },
+        {
+          name:"实时计算",
+          done:false,
+          sub:[{name:"Storm"},{name:"Spark",done:false}]
+        },
+        {
+          name:"RPC",
+          done:false,
+          sub:[{name:"dubbo"}]
+        },{
+          name:"分布式",
+          done:false,
+          sub:[{name:"Redis"},{name:"Zookeeper",done:false}]
+        }
+      ]
+    },{
+      name:"算法能力",
+      done:false,
+      sub:[{name:"机器学习",done:false},{name:"自然语言处理"}]
+    },{
+      name:"运维",
+      done:false,
+      sub:[{name:"Linux"},{name:"Docker",done:false}]
+    }
+  ]
+  function init(item){
+    var html = "";
+    var isLeaf = item.sub == undefined || item.sub.length == 0;
+      html +="<li>";
+    html += "<input type='checkbox' disabled "+(item.done==undefined||item.done?"checked":'')+">";
+    html+=item.name;
+      html +="</li>";
+    if(!isLeaf){
+      html+="<ul>";
+      for(var i = 0;i<item.sub.length;i++){
+        html+=init(item.sub[i]);
+      }
+      html+="</ul>";
+    }
+    return html;
+  }
+  window.onload = function(){
+    var html = "";
+    html+="<ul>";
+    for(var i = 0;i<tree.length;i++){
+      html+=init(tree[i]);
+    }
+    html+="</ul>";
+    document.getElementById("tree").innerHTML = html;
+  }
+</script>
+<h2>关键技能树</h2>
+<div id="tree">
+
+</div>
