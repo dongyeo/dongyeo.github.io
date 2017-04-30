@@ -11,9 +11,9 @@ tags: ["NLP"]
 
 ## 前言
 
-前一阵子，因为项目需求，使用到了分词工具，需求是在已给的一段话里实现一下需求：
+前一阵子，因为项目需求，使用到了分词工具，需求是在已给的一段话里实现以下需求：
     
-   - 根据事先整理好的语聊库，用不同颜色的字体，标注出一段话中各个词的频率等级。
+   - 根据事先整理好的语料库，用不同颜色的字体，标注出一段话中各个词的频率等级。
    - 根据分词结果，告诉当前语句是否通顺。
    
 第一个需求，只要使用分词工具将词切分出来，然后根据频率渲染字的颜色就可以。
@@ -49,7 +49,7 @@ tags: ["NLP"]
 
 以上就是一个最最简单的分词过程，从一句话的开始往下读，去搜索自己的词汇表，如果从上一个断句的点到当前的字无法组成一个词，继续读下一个字，直到这个组成字序列出现在词汇表中，他才算一个词。
 
-所以，汉语分词，首先需要一个词库，以词库为基础，来做分词。
+所以，汉语分词，首先需要一个词典，以词典为基础，来做分词，本章就来讲讲Java中是如何实现词典。
 
 ## 计算机中词典如何实现（数据结构）
 
@@ -64,7 +64,96 @@ tags: ["NLP"]
 
 那么计算机是用什么数据结构存储词典，又能保证词典的快速检索的呢？
 
-不卖关子，分词中使用的是一种叫做Trie三叉树的数据结构，
+不卖关子，分词中使用的是一种叫做Trie三叉树的数据结构。这种树结构和我们大学学的二叉树很像，假设我们有一个简单的词库，有一下词语：{今天,要,去,上学}为例，如下图所示为其存储结构：
+
+![trie-tree]({{ site.baseurl}}/img/trie-tree.png)
+
+词典以树状结构存储，每个节点存储一个字符，在JAVA中就是一个char。
+一个节点将会链接三个节点，左节点、相等节点、右节点。
+左（右）节点用实线链接，左边是存储字符比当前节点小的词，右边反之，中间是相等节点。
+红色节点代表一个词的结束，这个节点上存储着沿着一个完整的词。（这里，你可能发现存储的词结构是反着来的，这个后面再解释）
+
+这么解释可能有些拗口，我们直接上代码吧：
+
+```java
+//词数据结构
+public class Word {
+    //词
+    public String term;
+    //词频
+    public int freq;
+    //其他属性忽略
+}
+//节点数据结构
+public final class TSTNode {
+    //词，只有结束节点才不为空
+    private Word data;
+    //当前节点的字符
+    private char spliter;
+    //左节点
+    private TSTNode loNode;
+    //相等节点
+    private TSTNode eqNode;
+    //右节点
+    private TSTNode hiNode;
+}
+```
+
+基本的数据结构就是上面两个了，那么，我们要如何加载词典呢？
+
+下面是一个词典的数据结构，createTSTNode函数向字典加入一个词，并返回一个当前词的TSTNode指针。
+基本的思想就是当词典加载的时候，每个词都调用该方法，该方法从词的末尾开始，跟根节点中存储的字符比较，依次递归，在树中搜索并在根据字符的比较，在树种添加节点，直到这个词被存储到这课树种。
+
+```java
+public class TernarySearchTrieDic implements IDictionary {
+     private TSTNode rootNode;
+     public TSTNode createTSTNode(String key) throws NullPointerException, IllegalArgumentException {
+         if (key == null) {
+             throw new NullPointerException("空指针异常");
+         }
+         int charIndex = key.length() - 1;
+         if (rootNode == null) {
+             //根节点为空，直接新建一个节点作为根节点，节点中存储这个词的最后一个字符
+             rootNode = new TSTNode(key.charAt(charIndex));
+         }
+         TSTNode currentNode = rootNode;
+         //开始搜索树
+         while (true) {
+             //字符比较，大于零进入右树，小于零进入左树，等于零证明当前节点字符在该词的路径上
+             int comp = (key.charAt(charIndex) - currentNode.getSpliter());
+             if (comp == 0) {
+                 //相等，比较词的上一个字符
+                 charIndex--;
+                 if (charIndex <= -1) {
+                     //词遍历结束，找到节点
+                     return currentNode;
+                 }
+                 if (currentNode.getEqNode() == null) {
+                     //创建当前节点的相等节点，节点存储的字符是词的下一个字符
+                     currentNode.setEqNode(new TSTNode(key.charAt(charIndex)));
+                 }
+                 currentNode = currentNode.getEqNode();
+             } else if (comp < 0) {
+                 if (currentNode.getLoNode() == null) {
+                     currentNode.setLoNode(new TSTNode(key.charAt(charIndex)));
+                 }
+                 currentNode = currentNode.getLoNode();
+             } else {
+                 if (currentNode.getHiNode() == null) {
+                     currentNode.setHiNode(new TSTNode(key.charAt(charIndex)));
+                 }
+                 currentNode = currentNode.getHiNode();
+             }
+         }
+     }   
+}
+```
+
+
+词典相关的基本的数据结构基本上讲完了，至于怎么分词的，下章继续哈~
+
+另外，五一节快乐哦~
+
 
 
 
