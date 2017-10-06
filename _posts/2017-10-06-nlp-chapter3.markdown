@@ -89,7 +89,7 @@ public class BiEntry {
 
 ```
 
-二元词典代码如下：
+二元词典代码如下，在加载完一元词典后，扫描二元词典：
 
 
 ```java
@@ -108,6 +108,7 @@ public class BiGramDictionary implements IBiGramDictionary, IDictionary {
             String line;
             try {
                 while ((line = in.readLine()) != null) {
+                    //找到前后词的入口，并将联合出现的次数维护在前面词的表中
                     StringTokenizer st = new StringTokenizer(line, " ");
                     String words = st.nextToken();
                     String pre = words.substring(0, words.indexOf("@"));
@@ -162,7 +163,7 @@ public class BiGramDictionary implements IBiGramDictionary, IDictionary {
 
 ```
 
-具体分词算法实现
+上述分词算法的具体分词算法实现如下：
 
 ```java
 public class BiGramSegment implements ISegment {
@@ -194,14 +195,16 @@ public class BiGramSegment implements ISegment {
             Double maxProb = MIN_PROB;
             int maxPre = -1;
             Word preWord = null;
+            //找到当前节点的所有前驱词
             biGramDictionary.matchAll(sentence, i - 1, wordMatch);
             for (Word w1 : wordMatch) {
+                //遍历所有前驱词，计算前驱词的开始节点的最佳前驱词与当前前驱词的联合概率，并找到最大概率的前驱词作为当前节点的前驱词
                 int start = i - w1.term.length();
                 Word w2 = preWords[start];
                 double wordProb;
 
                 int biGramFreq = biGramDictionary.getBiFreq(w2, w1);
-
+                //平滑之后的概率
                 wordProb = LAMBDA_1 * w1.freq / biGramDictionary.getN() + LAMBDA_2 * (biGramFreq / w2.freq);
 
                 double nodeProb = prob[start] + Math.log(wordProb);
